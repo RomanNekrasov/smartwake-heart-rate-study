@@ -1,6 +1,7 @@
 import json
 import pandas as pd
-def format_data(unique_keys, master_frame):
+
+def format_mi_band_data(unique_keys, master_frame):
 # Create an empty dictionary to store the sub-dataframes
     key_dataframes = {}
 
@@ -25,3 +26,5 @@ def format_data(unique_keys, master_frame):
         key_dataframes[key] = key_df
 
     return key_dataframes
+
+# TBD: make a format_apple_watch_data function
