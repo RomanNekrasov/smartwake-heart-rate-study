@@ -10,7 +10,7 @@ We want to make the following functions:
 import pandas as pd
 import json
 
-def get_wake_up_info(watch_night_sleep_df,behaviour_tracking_data):
+def get_wake_up_info(watch_night_sleep_df, behaviour_tracking_data):
     # Convert 'wake_up_time' to datetime format
     watch_night_sleep_df['wake_up_time'] = pd.to_datetime(watch_night_sleep_df['wake_up_time'], unit='s')
 
@@ -24,25 +24,16 @@ def get_wake_up_info(watch_night_sleep_df,behaviour_tracking_data):
     # Map the wake-up time to the 'behaviour_tracking_data' using 'Date' and 'Name' as keys
     behaviour_tracking_data['time_of_awakening'] = behaviour_tracking_data.set_index(['Date', 'Name']).index.map(wake_time_mapping.get)
 
-    state_before_awakening = []
-    '''
-
-    This should be corrected to the following:
-    length is not same -> probably not all have items???
-    
-    for item in watch_night_sleep_df['Value']:
-        # Parse the JSON string into a Python dictionary
-        parsed_item = json.loads(item)
-        
-        # Extract the state of the last item in the 'items' list
+    # Create a mapping from 'Date' and 'Person' to 'state_before_awakening'
+    state_before_awakening_mapping = {}
+    for date, person, value in watch_night_sleep_df[['Date', 'Person', 'Value']].values:
+        parsed_item = json.loads(value)
         last_state = parsed_item['items'][-1]['state']
-        
-        # Append the extracted state to the list
-        state_before_awakening.append(last_state)
+        state_before_awakening_mapping[(date, person)] = last_state
 
-    # Now, we can add this list as a new column to the DataFrame
-    # If you're planning to add it to the original DataFrame, ensure that the index aligns correctly
-    behaviour_tracking_data['state_before_awakening'] = state_before_awakening
-    '''
+    # Map the 'state_before_awakening' to the 'behaviour_tracking_data'
+    behaviour_tracking_data['state_before_awakening'] = behaviour_tracking_data.apply(
+        lambda row: state_before_awakening_mapping.get((row['Date'], row['Name']), None), axis=1
+    )
 
     return behaviour_tracking_data
