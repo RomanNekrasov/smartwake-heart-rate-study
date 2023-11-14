@@ -1,7 +1,6 @@
 '''
 We want to make the following functions:
 - get_wake_up_times
-- calculate_sleep_duration
 - calculate_test_interval
 - get_heartrate_data_for_interval
 - check_if_woke_up_in_light_sleep
@@ -28,7 +27,7 @@ def get_wake_up_info(watch_night_sleep_df, behaviour_tracking_data):
     state_before_awakening_mapping = {}
     for date, person, value in watch_night_sleep_df[['Date', 'Person', 'Value']].values:
         parsed_item = json.loads(value)
-        last_state = parsed_item['items'][-1]['state']
+        last_state = int(parsed_item['items'][-1]['state'])
         state_before_awakening_mapping[(date, person)] = last_state
 
     # Map the 'state_before_awakening' to the 'behaviour_tracking_data'
@@ -37,3 +36,43 @@ def get_wake_up_info(watch_night_sleep_df, behaviour_tracking_data):
     )
 
     return behaviour_tracking_data
+
+def get_heartrate_data_for_interval(heartrate_df, person, date, time_of_awakening, time_interval):
+    # Ensure date is a datetime object
+    print(person, date, time_of_awakening, time_interval)
+    if not isinstance(date, pd.Timestamp):
+        date = pd.to_datetime(date).date()  # Get only the date part
+
+    # Ensure time_of_awakening is a time object
+    if isinstance(time_of_awakening, str):
+        time_of_awakening = pd.to_datetime(time_of_awakening).time()
+
+    heartrate_df['DateTime'] = pd.to_datetime(heartrate_df['Time'], unit='s')
+    heartrate_df['obs_date'] = heartrate_df['DateTime'].dt.date
+    heartrate_df['obs_time'] = heartrate_df['DateTime'].dt.time
+
+    # Calculate start_time directly from time_of_awakening
+    start_time = time_of_awakening
+    generic_date = pd.to_datetime('1900-01-01').date()
+    end_time = (pd.Timestamp.combine(generic_date, start_time) + pd.Timedelta(minutes=time_interval)).time()
+
+    # First, filter the dataframe for the person and the matching date
+    filtered_df = heartrate_df[(heartrate_df['Person'] == person) & (heartrate_df['obs_date'] == date)]
+
+    # calculate average over that day
+    #day_average_heart_rate = filtered_df['bpm'].mean()
+    # Then, filter by the time interval
+    filtered_df = filtered_df[(filtered_df['obs_time'] >= start_time) & (filtered_df['obs_time'] < end_time)]
+
+    # Calculate the average heart rate
+    average_heart_rate = float(filtered_df['bpm'].mean())
+
+    # Calculate the average of the lowest three heart rates
+    if len(filtered_df) >= 3:
+        average_lowest_three = float(filtered_df['bpm'].nsmallest(3).mean())
+    else:
+        average_lowest_three = None
+    print(len(filtered_df), average_heart_rate, average_lowest_three)
+
+    return int(len(filtered_df)), average_heart_rate, average_lowest_three
+
