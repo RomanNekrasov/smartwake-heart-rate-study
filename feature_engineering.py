@@ -9,7 +9,8 @@ We want to make the following functions:
 import pandas as pd
 import json
 
-def get_wake_up_info(watch_night_sleep_df, behaviour_tracking_data):
+def get_wake_up_info_miband(watch_night_sleep_df, behaviour_tracking_data):
+
     # Convert 'wake_up_time' to datetime format
     watch_night_sleep_df['wake_up_time'] = pd.to_datetime(watch_night_sleep_df['wake_up_time'], unit='s')
 
@@ -18,7 +19,7 @@ def get_wake_up_info(watch_night_sleep_df, behaviour_tracking_data):
     wake_time_mapping = watch_night_sleep_df.set_index(['Date', 'Person ID'])['wake_up_time'].dt.time.to_dict()
 
     # Convert 'Date created' to datetime and extract the date
-    behaviour_tracking_data['Date'] = pd.to_datetime(behaviour_tracking_data['Date created']).dt.date
+    # behaviour_tracking_data['Date'] = pd.to_datetime(behaviour_tracking_data['Date created']).dt.date
 
     # Map the wake-up time to the 'behaviour_tracking_data' using 'Date' and 'Person ID' as keys
     behaviour_tracking_data['time_of_awakening'] = behaviour_tracking_data.set_index(['Date', 'Person ID']).index.map(wake_time_mapping.get)
@@ -36,6 +37,23 @@ def get_wake_up_info(watch_night_sleep_df, behaviour_tracking_data):
     )
 
     return behaviour_tracking_data
+
+def get_wake_up_info_applewatch(apple_sleep_data, aggregated_df):
+    # Ensure the 'Date' in aggregated_df is in datetime.date format
+    aggregated_df['Date'] = pd.to_datetime(aggregated_df['Date']).dt.date
+
+    # Ensure the 'wake_up_date' in apple_sleep_data is in datetime.date format
+    apple_sleep_data['wake_up_date'] = pd.to_datetime(apple_sleep_data['wake_up_date']).dt.date
+    
+    # Merge the dataframes on the date fields
+    merged_df = aggregated_df.merge(apple_sleep_data, left_on='Date', right_on='wake_up_date', how='left')
+
+    # Rename columns for clarity
+    merged_df.rename(columns={'wake_up_time': 'time_of_awakening', 'last_sleep_state': 'state_before_awakening'}, inplace=True)
+
+    # Select relevant columns to return
+    columns_to_return = list(aggregated_df.columns) + ['time_of_awakening', 'state_before_awakening']
+    return merged_df[columns_to_return]
 
 def get_heartrate_data_for_interval(heartrate_df, person, date, time_of_awakening, time_interval):
     """
