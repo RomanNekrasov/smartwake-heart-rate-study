@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import json
 
 def format_mi_band_data(master_frame):
     # Create an empty dictionary to store the sub-dataframes
@@ -43,9 +44,6 @@ def format_mi_band_data(master_frame):
         key_dataframes[key] = key_df
 
     return key_dataframes
-
-import pandas as pd
-import json
 
 def get_wake_up_info_miband(watch_night_sleep_df, behaviour_tracking_data):
 
