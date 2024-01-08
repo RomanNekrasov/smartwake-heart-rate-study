@@ -37,6 +37,9 @@ Contains all defined functions needed to run the code in all notebooks seamlessl
 ## Data Description
 Data is collected from Xiaomi smartwatches and an Apple watch, in the form of csv files and an xml file. Preprocessing for these exact formats is included in EDA.jpynb and preprocessing.jpynb. These files contain different heart rate and sleep related features. The behavioral tracking data is also included in the form of an excel file, requiring minimal preprocessing. 
 
+## Study Reproducibility
+For reproducibility purposes, a consent form template and the information letter are available.
+=======
 An overview of the complete preprocessed data (aggregated_df.csv) resulting from the preprocessing notebook can be found below:
 | Column Name                 | Type    | Description                                                         |
 |-----------------------------|---------|---------------------------------------------------------------------|
@@ -58,15 +61,3 @@ An overview of the complete preprocessed data (aggregated_df.csv) resulting from
 | Average Lowest Three obs    | object  | The average of the lowest three heart rate observations             |
 | Average First Ten min       | object  | The average heart rate in the first ten minutes after waking        |
 | Average First Thirty min    | object  | The average heart rate in the first thirty minutes after waking     |
-
-
-
-
-
-
-
-
-
-
-
-
