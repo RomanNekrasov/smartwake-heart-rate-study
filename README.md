@@ -33,3 +33,7 @@ To test the effect of the smart-wake system on post-awakening heart rate OLS is 
 
 ## Data Description
 Data is collected from Xiaomi smartwatches and an Apple watch, in the form of csv files and an xml file. Preprocessing for these exact formats is included in EDA.jpynb and preprocessing.jpynb. These files contain different heart rate and sleep related features. The behavioral tracking data is also included in the form of an excel file, requiring minimal preprocessing. 
+
+
+## Study Reproducibility
+For reproducibility purposes, a consent form template and the information letter are available.
