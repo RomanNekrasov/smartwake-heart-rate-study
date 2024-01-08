@@ -31,5 +31,42 @@ This notebook contains all code needed for in depth analysis on heart and sleep 
 ## model_selection.ipynb
 To test the effect of the smart-wake system on post-awakening heart rate OLS is applied. In this notebook, you can find the check for OLS assumptions as well as the model itself and model results. 
 
+## functions.py 
+Contains all defined functions needed to run the code in all notebooks seamlessly. Functions are imported in each of the notebook, when necessary 
+
 ## Data Description
 Data is collected from Xiaomi smartwatches and an Apple watch, in the form of csv files and an xml file. Preprocessing for these exact formats is included in EDA.jpynb and preprocessing.jpynb. These files contain different heart rate and sleep related features. The behavioral tracking data is also included in the form of an excel file, requiring minimal preprocessing. 
+
+An overview of the complete preprocessed data (aggregated_df.csv) resulting from the preprocessing notebook can be found below:
+| Column Name                 | Type    | Description                                                         |
+|-----------------------------|---------|---------------------------------------------------------------------|
+| Person ID                   | int64   | Unique key identifier for subject                                   |
+| Drinks                      | int64   | Whether the subject consumed alcohol the day before                 |
+| Fastfood                    | int64   | Whether the subject consumed fast food the day before               |
+| Sports                      | int64   | Whether the subject has exercised the day before                    |
+| Food 2h before sleep        | int64   | Whether the subject has had food 2h before bedtime                  |
+| Medication                  | int64   | Whether the subject took medication the day before                  |
+| Date created                | object  | The date of logging data                                            |
+| Woke up by (smart) alarm    | int64   | Whether the subject woke up by smart alarm                          |
+| Woke up by external factors | int64   | Whether the subject woke up by external factors                     |
+| Slept again after alarm     | int64   | Whether the subject slept again after their alarm                   |
+| Smart alarm                 | int64   | Whether the subject used their smart alarm                          |
+| time_of_awakening           | object  | The time the subject woke up                                        |
+| state_before_awakening      | float64 | Sleep state before the subject woke up                              |
+| Number of Measurements      | object  | The number of heart rate measurements in the corresponding interval |
+| Average Heart Rate          | object  | The average heart rate in the corresponding interval                |
+| Average Lowest Three obs    | object  | The average of the lowest three heart rate observations             |
+| Average First Ten min       | object  | The average heart rate in the first ten minutes after waking        |
+| Average First Thirty min    | object  | The average heart rate in the first thirty minutes after waking     |
+
+
+
+
+
+
+
+
+
+
+
+
